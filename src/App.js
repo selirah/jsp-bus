@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { lazy, Suspense } from 'react'
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+import Spinner from './components/Spinner'
 
-function App() {
+const Main = lazy(() => import('./layout/Main'))
+
+const App = (props) => {
+  const { store, persistor } = props
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Provider store={store}>
+      <PersistGate persistor={persistor} loading={null}>
+        <Suspense fallback={<Spinner />}>
+          <Main />
+        </Suspense>
+      </PersistGate>
+    </Provider>
+  )
 }
 
-export default App;
+export default App
