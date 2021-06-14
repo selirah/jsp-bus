@@ -14,11 +14,19 @@ import BusLines from './bus-lines/BusLines'
 import Times from '../layout/Times'
 import { useSelector, useDispatch } from 'react-redux'
 import appActions from '../store/app/actions'
+import RoutePlanner from './route-planner/RoutePlanner'
 
 const { getStopTimesRequest } = appActions
 
 const Tabs = (props) => {
-  const { setMarker, setShowAllMarkers, toggleAllMarkers } = props
+  const {
+    setMarker,
+    setShowAllMarkers,
+    toggleAllMarkers,
+    setOrigin,
+    setDestination,
+    onSubmit
+  } = props
   const dispatch = useDispatch()
   const appStore = useSelector((state) => state.app)
   const [activeTab, setActiveTab] = useState('1')
@@ -122,6 +130,17 @@ const Tabs = (props) => {
                   toggleAllMarkers={toggleAllMarkers}
                 />
               )}
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tabId="3">
+          <Row>
+            <Col sm="12">
+              <RoutePlanner
+                setOrigin={setOrigin}
+                setDestination={setDestination}
+                onSubmit={onSubmit}
+              />
             </Col>
           </Row>
         </TabPane>

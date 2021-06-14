@@ -3,7 +3,7 @@ import Search from './Search'
 import { useSelector } from 'react-redux'
 import { Collapse, Card, CardHeader } from 'reactstrap'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import { BusLinesLayout } from '../Style'
+import { BusLinesLayout, LoadMoreLayout } from '../Style'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 import bus from '../../img/front-of-bus.svg'
 import { isEmpty } from '../../helper/isEmpty'
@@ -20,19 +20,27 @@ const BusLines = (props) => {
   const [routeStops, setRouteStops] = useState([])
   const [addIndex, setAddIndex] = useState(0)
   const [route, setRoute] = useState(null)
+  const [offset, setOffset] = useState(0)
+  const [page] = useState(50)
 
   const cleanUp = useCallback(() => {
     setItems([])
   }, [])
 
   useEffect(() => {
-    setItems(lines.slice(0, 50))
+    setItems(lines.slice(offset, page))
+    setOffset(offset + page)
 
     return () => {
       cleanUp()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const loadMore = useCallback(() => {
+    setItems([...items, ...lines.slice(offset, offset + page)])
+    setOffset(offset + page)
+  }, [offset, page, items, lines])
 
   const onLoadStops = useCallback(
     (stopIds) => {
@@ -178,6 +186,11 @@ const BusLines = (props) => {
             )
           })}
         </PerfectScrollbar>
+        {items.length < lines.length ? (
+          <LoadMoreLayout onClick={() => loadMore()}>
+            Load More +
+          </LoadMoreLayout>
+        ) : null}
       </BusLinesLayout>
     </Fragment>
   )

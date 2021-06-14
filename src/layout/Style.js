@@ -386,6 +386,92 @@ const BusLinesLayout = styled.div`
   }
 `
 
+const PlannerBackground = styled.div`
+  text-align: center;
+  margin: 0;
+  padding: 0;
+
+  h2 {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+    padding-top: 2.5rem;
+    color: #a20c25;
+  }
+
+  .planner__box {
+    display: block;
+    margin: 0 auto;
+    padding: 2rem;
+    .planner__box--inputbox {
+      position: relative;
+      margin: 0.8rem;
+      input {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 0.65rem;
+        border: 1px solid #ced4da;
+        border-radius: 0;
+        outline: none;
+        background: #fff;
+        padding: 1.5rem;
+        font-size: 1rem;
+      }
+      .location-icon {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        color: #222;
+        font-size: 0.7rem;
+        padding-right: 0.5rem;
+        :hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .planner__box--inputbtn {
+      position: relative;
+      margin: 0.8rem;
+      flex: 0;
+      .btn {
+        background: #222;
+        width: 100%;
+        height: 3rem;
+        text-align: center;
+        border: none;
+        border-radius: 0;
+        text-transform: uppercase;
+        font-weight: 300;
+        outline: 0;
+        :focus,
+        :active {
+          outline: none !important;
+          box-shadow: none;
+          background: #222 !important;
+        }
+
+        .map__icon {
+          color: #fff;
+          position: absolute;
+          top: 0.5rem;
+          left: 1rem;
+
+          :hover {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+`
+
+const LoadMoreLayout = styled.span`
+  color: #a20c25;
+  font-weight: 700;
+  cursor: pointer;
+`
+
 export {
   LoaderWrapper,
   MainWrapper,
@@ -394,5 +480,7 @@ export {
   StopInfoWindowWrapper,
   BusStopsLayout,
   TimesLayout,
-  BusLinesLayout
+  BusLinesLayout,
+  PlannerBackground,
+  LoadMoreLayout
 }

@@ -1,5 +1,9 @@
 import React from 'react'
-import { GoogleMap } from '@react-google-maps/api'
+import {
+  GoogleMap,
+  DirectionsService,
+  DirectionsRenderer
+} from '@react-google-maps/api'
 import StopMarker from './map/StopMarker'
 import { isEmpty } from '../helper/isEmpty'
 import MapStyles from './MapStyles'
@@ -30,19 +34,50 @@ const Map = (props) => {
     showAllMarkers,
     map,
     showInfo,
-    stops
+    stops,
+    addressInput,
+    directionsCallback,
+    directionResponse
   } = props
-  // const { origin, destination } = useSelector((state) => state.app)
+  const directionsService = new window.google.maps.DirectionsService()
+  const directionsDisplay = new window.google.maps.DirectionsRenderer()
 
   if (showAllMarkers && !isEmpty(stops)) {
     let bounds = new window.google.maps.LatLngBounds()
     for (let i = 0; i < stops.length; i++) {
       bounds.extend({
-        lat: props.stops[i].lat,
-        lng: props.stops[i].Lon
+        lat: stops[i].lat,
+        lng: stops[i].Lon
       })
     }
     map.current.fitBounds(bounds)
+  }
+
+  let content
+  if (addressInput) {
+    const { origin, destination } = addressInput
+    content = (
+      <>
+        <DirectionsService
+          options={{
+            origin: new window.google.maps.LatLng(origin.lat, origin.lng),
+            destination: new window.google.maps.LatLng(
+              destination.lat,
+              destination.lng
+            ),
+            travelMode: 'DRIVING'
+          }}
+          callback={directionsCallback}
+          onLoad={onLoadMap}
+        />
+        {directionResponse && (
+          <DirectionsRenderer
+            options={{ directions: directionResponse }}
+            onLoad={onLoadMap}
+          />
+        )}
+      </>
+    )
   }
 
   return (
@@ -64,6 +99,7 @@ const Map = (props) => {
               showInfo={showInfo}
             />
           ) : null}
+          {content}
         </>
       ) : (
         stops.map((bs, index) => (

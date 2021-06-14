@@ -36,6 +36,10 @@ const Main = () => {
   const [showInfo, setShowInfo] = useState(false)
   const [showAllMarkers, setShowAllMarkers] = useState(false)
   const [stop, setStop] = useState(null)
+  const [origin, setOrigin] = useState(null)
+  const [destination, setDestination] = useState(null)
+  const [addressInput, setAddressInput] = useState(null)
+  const [directionResponse, setDirectionResponse] = useState(null)
 
   useEffect(() => {
     dispatch(getLinesRequest())
@@ -62,6 +66,8 @@ const Main = () => {
 
   const onLoadMapMarker = useCallback(
     (stop) => {
+      setDirectionResponse(null)
+      setAddressInput(null)
       setStop(stop)
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -90,6 +96,8 @@ const Main = () => {
 
   const toggleAllMarkers = useCallback(
     (stops) => {
+      setDirectionResponse(null)
+      setAddressInput(null)
       if (showAllMarkers) {
         setStops([])
       } else {
@@ -99,6 +107,28 @@ const Main = () => {
     },
     [showAllMarkers]
   )
+
+  const setPlaceOrigin = useCallback(({ lat, lng }) => {
+    setOrigin({ lat, lng })
+  }, [])
+
+  const setPlaceDestination = useCallback(({ lat, lng }) => {
+    setDestination({ lat, lng })
+  }, [])
+
+  const onSubmit = useCallback(() => {
+    if (origin && destination) {
+      setAddressInput({ origin, destination })
+    }
+  }, [origin, destination])
+
+  const directionsCallback = useCallback((response) => {
+    if (response !== null) {
+      if (response.status === 'OK') {
+        setDirectionResponse(response)
+      }
+    }
+  }, [])
 
   return (
     <Fragment>
@@ -114,6 +144,9 @@ const Main = () => {
               setMarker={onLoadMapMarker}
               setShowAllMarkers={(value) => setShowAllMarkers(value)}
               toggleAllMarkers={toggleAllMarkers}
+              setOrigin={setPlaceOrigin}
+              setDestination={setPlaceDestination}
+              onSubmit={onSubmit}
             />
           </TabsLayout>
           <MapLayout>
@@ -126,6 +159,9 @@ const Main = () => {
               map={mapRef}
               showInfo={showInfo}
               stops={stops}
+              addressInput={addressInput}
+              directionsCallback={directionsCallback}
+              directionResponse={directionResponse}
             />
           </MapLayout>
         </MainWrapper>
